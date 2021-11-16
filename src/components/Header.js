@@ -6,10 +6,10 @@ export default function Header(props) {
 		<div className="header">
 			<div className="header">
 				<Link className="headerLinks" to={'/'}>
-					<h1 className="title">MMO Character Tracker</h1>
+					<h1 className="title">New World Character Tracker</h1>
 				</Link>
 				<ul className="navLinks">
-					{props.isLoggedIn ? (
+					{localStorage.user ? (
 						<>
 							<Link className="headerLinks" to={'/user/profile'}>
 								<li>Profile</li>

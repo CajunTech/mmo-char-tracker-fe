@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Signup from './components/Signup';
 import Profile from './components/Profile';
 import Login from './components/Login';
+import NewCharacter from './components/NewCharacter';
 import './App.css';
 
 export default class App extends Component {
@@ -51,8 +52,7 @@ export default class App extends Component {
 				console.log(error);
 			});
 	};
-
-
+	
 	handleLogin = (e) => {
 		e.preventDefault();
 		const data = {
@@ -61,9 +61,15 @@ export default class App extends Component {
 		};
 		axios
 			.post('http://localhost:3001/auth/login', data)
+			// .then((response) => {
+			// 	console.log(response);
+			// 	this.setState({ token: response.data.token });
+			// })
 			.then((response) => {
-				console.log(response);
-				this.setState({ token: response.data.token });
+				const users = response.data
+				  localStorage.setItem('jwt', users.token)
+				  localStorage.setItem('user',users.user.username)
+				  console.log('users', users) // undefined
 			})
 			.then(() => {
 				this.setState({currentUser: this.state.username})
@@ -82,6 +88,7 @@ export default class App extends Component {
 
 	handleLogout = (e) => {
 		e.preventDefault();
+		localStorage.clear()
 		this.setState({ isLoggedIn: false });
 		this.setState({currentUser: null});
 		this.setState({username: ''})
@@ -118,6 +125,12 @@ export default class App extends Component {
 								handleChange={this.handleChange}
 								handleLogin={this.handleLogin}
 							/>
+						)}	
+					/>
+						<Route
+						path="/user/newcharacter"
+						render={(routerProps) => (
+							<NewCharacter {...routerProps} {...this.state} />
 						)}
 					/>
 			</div>
