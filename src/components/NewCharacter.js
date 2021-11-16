@@ -1,8 +1,8 @@
 import React from 'react';
 import data from './serverdata.json';
 
-function NewCharacter() {
-	const serverList = data.map((server) => <option value={server} />);
+export default function NewCharacter(props) {
+	const serverList = data.map((server, index) => <option value={server} key={index} />);
 
 	return (
 		<div>
@@ -12,7 +12,7 @@ function NewCharacter() {
 					<legend>New Character</legend>
                     <br/>
 					<label>Name: </label>
-					<input type="text" name="username" />
+					<input type="text" name="chracterName" autoComplete="off"/>
 					<br />
 					<br />
 					<label>Server: </label>
@@ -21,7 +21,12 @@ function NewCharacter() {
 					<br />
 					<datalist id="server-list">{serverList}</datalist>
 					<label>Faction: </label>
-					<input type="text" name="username" />
+					<input list="faction-list" type="text" name="faction" />
+                    <datalist id="faction-list">
+                        <option value="Covenant"/>
+                        <option value="Marauders"/>
+                        <option value="Syndicate"/>
+                    </datalist>
 					<br />
                     <br/>
 				</fieldset>
@@ -32,4 +37,3 @@ function NewCharacter() {
 	);
 }
 
-export default NewCharacter;

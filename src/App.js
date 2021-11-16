@@ -40,9 +40,13 @@ export default class App extends Component {
 		};
 		axios
 			.post(`${BASE_URL}/auth/signup`, data)
+			// .then((response) => {
+			// 	this.setState({ token: response.data.token });
+			// })
 			.then((response) => {
-				console.log(response);
-				this.setState({ token: response.data.token });
+				const users = response.data;
+				localStorage.setItem('jwt', users.token);
+				localStorage.setItem('user', users.user.username);
 			})
 			.then(() => {
 				this.setState({ currentUser: this.state.username });
@@ -75,7 +79,6 @@ export default class App extends Component {
 				const users = response.data;
 				localStorage.setItem('jwt', users.token);
 				localStorage.setItem('user', users.user.username);
-				console.log('users', users); // undefined
 			})
 			.then(() => {
 				this.setState({ currentUser: this.state.username });
