@@ -5,8 +5,11 @@
     color: white;
     display: flex;
   }
-  .seeLinks {
+  .headerLinks {
     color: white;
     text-decoration: none;
     list-style-type: none;
+  }
+  .headerLinks:hover {
+    cursor:pointer;
   }

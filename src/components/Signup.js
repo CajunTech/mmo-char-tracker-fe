@@ -1,13 +1,14 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 export default function Signup(props) {
     if (props.isLoggedIn) {
-        props.history.push("/user/profile")
+        return <Redirect to={'/user/profile'} />;
       }
 	return (
 		<div className="signupPage">
 			<form onSubmit={props.handleSignup} className="signupForm">
-				Username:
+				Username:{' '}
 				<input
 					onChange={props.handleChange}
 					type="text"
@@ -15,7 +16,7 @@ export default function Signup(props) {
 					value={props.username}
 					autoComplete="off"
 				/>
-				Password:
+				Password:{' '}
 				<input
 					onChange={props.handleChange}
 					type="password"
@@ -23,7 +24,7 @@ export default function Signup(props) {
 					value={props.password}
 					autoComplete="off"
 				/>
-				Confirm Password:
+				Confirm Password:{' '}
 				<input
 					onChange={props.handleChange}
 					type="password"
