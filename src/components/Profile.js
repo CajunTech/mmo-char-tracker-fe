@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 function Profile(props) {
+    props.getProfile()
     return (
         <div>
             <h1>Profile Page</h1>

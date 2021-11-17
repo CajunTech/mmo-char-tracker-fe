@@ -25,7 +25,16 @@ export default class App extends Component {
 			userData: [],
 			isLoggedIn: false,
 			currentUser: null,
+			displayName: ''
 		};
+	}
+
+	getProfile = () => {
+		axios
+			.get(`${BASE_URL}/user/profile/${localStorage.user}`)
+			.then((response) => {
+				console.log(response)
+			})
 	}
 
 	handleChange = (e) => {
@@ -37,6 +46,7 @@ export default class App extends Component {
 		const data = {
 			username: this.state.username,
 			password: this.state.password,
+			displayName: this.state.displayName
 		};
 		axios
 			.post(`${BASE_URL}/auth/signup`, data)
@@ -59,6 +69,7 @@ export default class App extends Component {
 				this.setState({ isLoggedIn: true });
 			})
 			.catch((error) => {
+				console.log(BASE_URL)
 				console.log(error);
 			});
 	};
@@ -104,6 +115,19 @@ export default class App extends Component {
 		this.setState({ password: '' });
 	};
 
+	createNewCharacter = (e) => {
+		const data = {
+			createdBy: localStorage.user,
+			characterName: e.target[1].value,
+			server: e.target[2].value,
+			faction: e.target[3].value,
+			characterBio: e.target[4].value,
+		};
+		console.log(data);
+		e.preventDefault();
+		axios.post(`${BASE_URL}/user/newcharacter`, data);
+	};
+
 	render() {
 		return (
 			<div className="App">
@@ -124,7 +148,7 @@ export default class App extends Component {
 				/>
 				<Route
 					path="/user/profile"
-					render={(routerProps) => <Profile {...routerProps} {...this.state} />}
+					render={(routerProps) => <Profile {...routerProps} {...this.state} getProfile={this.getProfile}/>}
 				/>
 				<Route
 					path="/user/login"
@@ -140,7 +164,11 @@ export default class App extends Component {
 				<Route
 					path="/user/newcharacter"
 					render={(routerProps) => (
-						<NewCharacter {...routerProps} {...this.state} />
+						<NewCharacter
+							{...routerProps}
+							{...this.state}
+							createNewCharacter={this.createNewCharacter}
+						/>
 					)}
 				/>
 			</div>

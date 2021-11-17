@@ -15,7 +15,7 @@ export default function Signup(props) {
 					name="username"
 					value={props.username}
 					autoComplete="off"
-				/>
+				/><br /><br />
 				Password:{' '}
 				<input
 					onChange={props.handleChange}
@@ -23,7 +23,7 @@ export default function Signup(props) {
 					name="password"
 					value={props.password}
 					autoComplete="off"
-				/>
+				/><br /><br />
 				Confirm Password:{' '}
 				<input
 					onChange={props.handleChange}
@@ -31,7 +31,15 @@ export default function Signup(props) {
 					name="confirmedPassword"
 					value={props.confirmedPassword}
 					autoComplete="off"
-				/>
+				/><br /><br />
+				Display Name:{' '}
+				<input
+					onChange={props.handleChange}
+					type="text"
+					name="displayName"
+					value={props.displayName}
+					autoComplete="off"
+				/><br /><br />
 				<button>Signup</button>
 			</form>
 		</div>
