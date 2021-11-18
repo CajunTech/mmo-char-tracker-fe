@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Uploading from './Uploading'
+
 
 export default function Profile(props) {
 	console.log(props.userCharacters.data);
@@ -32,7 +32,9 @@ export default function Profile(props) {
 					})}
 				</tbody>
 			</table>
-			<Uploading />
+			<Link to={"/user/newimage"}>
+				<p>Upload New Image</p>
+				</Link>
             <img src="https://nwchars.s3.us-east-2.amazonaws.com/18.png"/>
 		</div>
 	);

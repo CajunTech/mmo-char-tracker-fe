@@ -6,7 +6,8 @@ import Signup from './components/Signup';
 import Profile from './components/Profile';
 import Login from './components/Login';
 import NewCharacter from './components/NewCharacter';
-import "bootswatch/dist/superhero/bootstrap.min.css"
+import NewImage from './components/NewImage';
+import 'bootswatch/dist/superhero/bootstrap.min.css';
 import './App.css';
 let BASE_URL = '';
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -29,6 +30,7 @@ export default class App extends Component {
 			displayName: '',
 			userProfile: null,
 			userCharacters: [],
+			currentImageLink: null
 		};
 	}
 
@@ -67,6 +69,9 @@ export default class App extends Component {
 				localStorage.setItem('user', users.user.username);
 			})
 			.then(() => {
+				this.getProfile();
+			})
+			.then(() => {
 				this.setState({ currentUser: this.state.username });
 			})
 			.then(() => {
@@ -75,7 +80,10 @@ export default class App extends Component {
 			})
 			.then(() => {
 				this.setState({ isLoggedIn: true });
-			}).then(() => {this.getProfile()})
+			})
+			.then(() => {
+				this.getProfile();
+			})
 			.catch((error) => {
 				console.log(BASE_URL);
 				console.log(error);
@@ -100,6 +108,9 @@ export default class App extends Component {
 				localStorage.setItem('user', users.user.username);
 			})
 			.then(() => {
+				this.getProfile();
+			})
+			.then(() => {
 				this.setState({ currentUser: this.state.username });
 			})
 			.then(() => {
@@ -108,7 +119,7 @@ export default class App extends Component {
 			})
 			.then(() => {
 				this.setState({ isLoggedIn: true });
-			}).then(() => {this.getProfile()})
+			})
 			.catch((error) => {
 				console.log(error);
 			});
@@ -137,6 +148,23 @@ export default class App extends Component {
 			return <Redirect to="/" />;
 		});
 	};
+	createNewImage = (e) => {
+		e.preventDefault();
+		console.log(e)
+		const data = {
+			imageOwner : localStorage.user,
+			imageLink : this.state.currentImageLink,
+			imageName : e.target[0].value ,
+			imageCaption: e.target[1].value
+		};
+		axios.post(`${BASE_URL}/user/newimage`, data).then(() => {
+			return <Redirect to="/" />;
+		});
+	};
+
+	setImage = (link) => {
+		this.setState({currentImageLink: link.split(' ').join('+')})
+	}
 
 	render() {
 		return (
@@ -184,6 +212,17 @@ export default class App extends Component {
 							{...routerProps}
 							{...this.state}
 							createNewCharacter={this.createNewCharacter}
+						/>
+					)}
+				/>
+				<Route
+					path="/user/newimage"
+					render={(routerProps) => (
+						<NewImage
+							{...routerProps}
+							{...this.state}
+							createNewImage={this.createNewImage}
+							setImage={this.setImage}
 						/>
 					)}
 				/>
