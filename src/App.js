@@ -30,7 +30,8 @@ export default class App extends Component {
 			displayName: '',
 			userProfile: null,
 			userCharacters: [],
-			currentImageLink: null
+			userImages: [],
+			currentImageLink: null,
 		};
 	}
 
@@ -40,11 +41,16 @@ export default class App extends Component {
 	};
 
 	getProfile = async (e) => {
-		const [userProfile, userCharacters] = await Promise.all([
+		const [userProfile, userCharacters, userImages] = await Promise.all([
 			axios.get(`${BASE_URL}/user/profile/${localStorage.user}`),
 			axios.get(`${BASE_URL}/user/characters/${localStorage.user}`),
+			axios.get(`${BASE_URL}/user/images/${localStorage.user}`),
 		]);
-		this.setState({ userProfile: userProfile, userCharacters: userCharacters });
+		this.setState({
+			userProfile: userProfile,
+			userCharacters: userCharacters,
+			userImages: userImages,
+		});
 	};
 
 	handleChange = (e) => {
@@ -145,26 +151,26 @@ export default class App extends Component {
 		console.log(data);
 		e.preventDefault();
 		axios.post(`${BASE_URL}/user/newcharacter`, data).then(() => {
-			return <Redirect to="/" />;
+			this.getProfile();
 		});
 	};
 	createNewImage = (e) => {
 		e.preventDefault();
-		console.log(e)
+		console.log(e);
 		const data = {
-			imageOwner : localStorage.user,
-			imageLink : this.state.currentImageLink,
-			imageName : e.target[0].value ,
-			imageCaption: e.target[1].value
+			imageOwner: localStorage.user,
+			imageLink: this.state.currentImageLink,
+			imageName: e.target[0].value,
+			imageCaption: e.target[1].value,
 		};
 		axios.post(`${BASE_URL}/user/newimage`, data).then(() => {
-			return <Redirect to="/" />;
+			this.getProfile();
 		});
 	};
 
 	setImage = (link) => {
-		this.setState({currentImageLink: link.split(' ').join('+')})
-	}
+		this.setState({ currentImageLink: link.split(' ').join('+') });
+	};
 
 	render() {
 		return (
