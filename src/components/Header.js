@@ -5,14 +5,14 @@ export default function Header(props) {
 	return (
 		<div className="header">
 			<div className="header">
-				<Link className="headerLinks" to={'/'}>
+				<Link className="mainHeaderLink" to={'/'}>
 					<h1 className="title">New World Character Tracker</h1>
 				</Link>
 				<ul className="navLinks">
 					{localStorage.user ? (
 						<>
 							<Link className="headerLinks" to={'/user/profile'}>
-								<li>Profile</li>
+								<li className="navLink">Profile</li>
 							</Link>
 							<li className="headerLinks" onClick={props.handleLogout}>
 								Logout
@@ -21,10 +21,10 @@ export default function Header(props) {
 					) : (
 						<>
 							<Link className="headerLinks" to={'/user/login'}>
-								<li>Login</li>
+								<li className="navLink">Login</li>
 							</Link>
 							<Link className="headerLinks" to={'/user/signup'}>
-								<li>Signup (Profile)</li>
+								<li className="navLink">Signup (Profile)</li>
 							</Link>
 						</>
 					)}

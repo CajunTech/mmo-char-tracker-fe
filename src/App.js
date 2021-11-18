@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import axios from 'axios';
 import Header from './components/Header';
 import Signup from './components/Signup';
 import Profile from './components/Profile';
 import Login from './components/Login';
 import NewCharacter from './components/NewCharacter';
+import "bootswatch/dist/superhero/bootstrap.min.css"
 import './App.css';
 let BASE_URL = '';
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -25,17 +26,24 @@ export default class App extends Component {
 			userData: [],
 			isLoggedIn: false,
 			currentUser: null,
-			displayName: ''
+			displayName: '',
+			userProfile: null,
+			userCharacters: [],
 		};
 	}
 
-	getProfile = () => {
-		axios
-			.get(`${BASE_URL}/user/profile/${localStorage.user}`)
-			.then((response) => {
-				console.log(response)
-			})
-	}
+	componentDidMount = () => {
+		this.getProfile();
+		console.log('Component Mount Run');
+	};
+
+	getProfile = async (e) => {
+		const [userProfile, userCharacters] = await Promise.all([
+			axios.get(`${BASE_URL}/user/profile/${localStorage.user}`),
+			axios.get(`${BASE_URL}/user/characters/${localStorage.user}`),
+		]);
+		this.setState({ userProfile: userProfile, userCharacters: userCharacters });
+	};
 
 	handleChange = (e) => {
 		this.setState({ ...this.state, [e.target.name]: e.target.value });
@@ -46,7 +54,7 @@ export default class App extends Component {
 		const data = {
 			username: this.state.username,
 			password: this.state.password,
-			displayName: this.state.displayName
+			displayName: this.state.displayName,
 		};
 		axios
 			.post(`${BASE_URL}/auth/signup`, data)
@@ -67,9 +75,9 @@ export default class App extends Component {
 			})
 			.then(() => {
 				this.setState({ isLoggedIn: true });
-			})
+			}).then(() => {this.getProfile()})
 			.catch((error) => {
-				console.log(BASE_URL)
+				console.log(BASE_URL);
 				console.log(error);
 			});
 	};
@@ -100,7 +108,7 @@ export default class App extends Component {
 			})
 			.then(() => {
 				this.setState({ isLoggedIn: true });
-			})
+			}).then(() => {this.getProfile()})
 			.catch((error) => {
 				console.log(error);
 			});
@@ -125,7 +133,9 @@ export default class App extends Component {
 		};
 		console.log(data);
 		e.preventDefault();
-		axios.post(`${BASE_URL}/user/newcharacter`, data);
+		axios.post(`${BASE_URL}/user/newcharacter`, data).then(() => {
+			return <Redirect to="/" />;
+		});
 	};
 
 	render() {
@@ -148,7 +158,13 @@ export default class App extends Component {
 				/>
 				<Route
 					path="/user/profile"
-					render={(routerProps) => <Profile {...routerProps} {...this.state} getProfile={this.getProfile}/>}
+					render={(routerProps) => (
+						<Profile
+							{...routerProps}
+							{...this.state}
+							getProfile={this.getProfile}
+						/>
+					)}
 				/>
 				<Route
 					path="/user/login"
