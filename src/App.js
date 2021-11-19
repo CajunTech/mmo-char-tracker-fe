@@ -70,9 +70,9 @@ class App extends Component {
 			// 	this.setState({ token: response.data.token });
 			// })
 			.then((response) => {
-				const users = response.data;
-				localStorage.setItem('jwt', users.token);
-				localStorage.setItem('user', users.user.username);
+				// const users = response.data;
+				// localStorage.setItem('jwt', users.token);
+				localStorage.setItem('user', "cajuntech");
 			})
 			.then(() => {
 				this.getProfile();
@@ -109,9 +109,9 @@ class App extends Component {
 			// 	this.setState({ token: response.data.token });
 			// })
 			.then((response) => {
-				const users = response.data;
-				localStorage.setItem('jwt', users.token);
-				localStorage.setItem('user', users.user.username);
+				// const users = response.data;
+				// localStorage.setItem('jwt', users.token);
+				localStorage.setItem('user', "cajuntech");
 			})
 			.then(() => {
 				this.getProfile();
