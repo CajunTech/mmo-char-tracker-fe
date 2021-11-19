@@ -5,7 +5,7 @@ export default function Profile(props) {
 	console.log(props.userCharacters.data);
 	return (
 		<div>
-			<h1>Welcome {props.userProfile.data[0].displayName}</h1>
+			<h1>{props.userProfile.data[0].displayName}'s Profile Page</h1>
 			<br />
 			<h2>Character List</h2>
 			<Link className="newCharacterLink" to={'/user/newcharacter'}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Header from './components/Header';
 import Signup from './components/Signup';
@@ -13,10 +13,10 @@ let BASE_URL = '';
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 	BASE_URL = 'http://localhost:3000';
 } else {
-	BASE_URL = 'https://nw-char.herokuapp.com';
+	BASE_URL = 'https://stark-tundra-57127.herokuapp.com/https://nw-chars.herokuapp.com';
 }
 
-export default class App extends Component {
+class App extends Component {
 	constructor() {
 		super();
 		this.state = {
@@ -236,3 +236,5 @@ export default class App extends Component {
 		);
 	}
 }
+
+export default withRouter(App)

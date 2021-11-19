@@ -40,6 +40,7 @@ export default function NewImage(props) {
 				<br />
 				<textarea
 					id="caption"
+					type="text"
 					name="imageCaption"
 					rows="4"
 					cols="50"
