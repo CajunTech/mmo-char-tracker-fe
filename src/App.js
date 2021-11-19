@@ -13,7 +13,7 @@ let BASE_URL = '';
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 	BASE_URL = 'http://localhost:3000';
 } else {
-	BASE_URL = 'https://stark-tundra-57127.herokuapp.com/https://nw-chars.herokuapp.com';
+	BASE_URL = 'https://nw-chars.herokuapp.com';
 }
 
 class App extends Component {
