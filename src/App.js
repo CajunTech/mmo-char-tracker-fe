@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Route, withRouter } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Header from './components/Header';
 import Signup from './components/Signup';
@@ -7,6 +7,8 @@ import Profile from './components/Profile';
 import Login from './components/Login';
 import NewCharacter from './components/NewCharacter';
 import NewImage from './components/NewImage';
+import ProfileEdit from './components/ProfileEdit';
+import Homepage from './components/Homepage';
 import 'bootswatch/dist/superhero/bootstrap.min.css';
 import './App.css';
 let BASE_URL = '';
@@ -24,7 +26,7 @@ class App extends Component {
 			password: '',
 			confirmedPassword: '',
 			token: '',
-			userData: [],
+			userData: {},
 			isLoggedIn: false,
 			currentUser: null,
 			displayName: '',
@@ -51,6 +53,13 @@ class App extends Component {
 			userCharacters: userCharacters,
 			userImages: userImages,
 		});
+		localStorage.setItem('userProfile', JSON.stringify(userProfile));
+		localStorage.setItem('userCharacters', JSON.stringify(userCharacters));
+		localStorage.setItem('userImages', JSON.stringify(userImages));
+		// console.log("str", localStorage.userProfile)
+		console.log('userProfile', JSON.parse(localStorage.userProfile));
+		console.log('userCharacters', JSON.parse(localStorage.userCharacters).data);
+		console.log('userImages', JSON.parse(localStorage.userImages).data);
 	};
 
 	handleChange = (e) => {
@@ -72,7 +81,7 @@ class App extends Component {
 			.then((response) => {
 				// const users = response.data;
 				// localStorage.setItem('jwt', users.token);
-				localStorage.setItem('user', "cajuntech");
+				localStorage.setItem('user', response.data.user);
 			})
 			.then(() => {
 				this.getProfile();
@@ -96,6 +105,14 @@ class App extends Component {
 			});
 	};
 
+	delayRedirect = (link) => {
+		const {
+			history: { push },
+		} = this.props;
+		link.preventDefault();
+		setTimeout(() => push(link), 2000);
+	};
+
 	handleLogin = (e) => {
 		e.preventDefault();
 		const data = {
@@ -104,27 +121,22 @@ class App extends Component {
 		};
 		axios
 			.post(`${BASE_URL}/auth/login`, data)
-			// .then((response) => {
-			// 	console.log(response);
-			// 	this.setState({ token: response.data.token });
-			// })
 			.then((response) => {
-				// const users = response.data;
-				// localStorage.setItem('jwt', users.token);
-				localStorage.setItem('user', "cajuntech");
+				localStorage.setItem('user', response.data.user);
 			})
 			.then(() => {
 				this.getProfile();
 			})
-			.then(() => {
-				this.setState({ currentUser: this.state.username });
-			})
-			.then(() => {
-				this.setState({ username: '' });
-				this.setState({ password: '' });
-			})
+			// .then(() => {
+			// 	this.setState({ currentUser: this.state.username });
+			// })
+			// .then(() => {
+			// 	this.setState({ username: '' });
+			// 	this.setState({ password: '' });
+			// })
 			.then(() => {
 				this.setState({ isLoggedIn: true });
+				this.delayRedirect('/user/profile');
 			})
 			.catch((error) => {
 				console.log(error);
@@ -134,10 +146,11 @@ class App extends Component {
 	handleLogout = (e) => {
 		e.preventDefault();
 		localStorage.clear();
-		this.setState({ isLoggedIn: false });
-		this.setState({ currentUser: null });
-		this.setState({ username: '' });
-		this.setState({ password: '' });
+		this.props.history.push('/');
+		// this.setState({ isLoggedIn: false });
+		// this.setState({ currentUser: null });
+		// this.setState({ username: '' });
+		// this.setState({ password: '' });
 	};
 
 	createNewCharacter = (e) => {
@@ -172,12 +185,28 @@ class App extends Component {
 		this.setState({ currentImageLink: link.split(' ').join('+') });
 	};
 
+	handleUserEdit = (e) => {
+		const data = {
+			displayName: e.target[0].value,
+			email: e.target[1].value,
+			userBio: e.target[2].value
+		}
+		e.preventDefault();
+		console.log(data);
+	};
+
 	render() {
 		return (
 			<div className="App">
 				<Header
 					isLoggedIn={this.state.isLoggedIn}
 					handleLogout={this.handleLogout}
+				/>
+				<Route
+					path="/"
+					render={(routerProps) => (
+						<Homepage {...routerProps} {...this.state} />
+					)}
 				/>
 				<Route
 					path="/user/signup"
@@ -191,6 +220,7 @@ class App extends Component {
 					)}
 				/>
 				<Route
+					exact
 					path="/user/profile"
 					render={(routerProps) => (
 						<Profile
@@ -201,6 +231,17 @@ class App extends Component {
 					)}
 				/>
 				<Route
+					path="/user/edit"
+					render={(routerProps) => (
+						<ProfileEdit
+							{...routerProps}
+							{...this.state}
+							handleUserEdit={this.handleUserEdit}
+						/>
+					)}
+				/>
+				<Route
+					exact
 					path="/user/login"
 					render={(routerProps) => (
 						<Login
@@ -237,4 +278,4 @@ class App extends Component {
 	}
 }
 
-export default withRouter(App)
+export default withRouter(App);
