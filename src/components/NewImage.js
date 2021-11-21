@@ -6,10 +6,9 @@ export default function NewImage(props) {
 
 	const config = {
 		bucketName: 'nwchars',
-		// dirName: '',
 		region: 'us-east-2',
-		accessKeyId: 'AKIAZJ5Z5HGAS742ZQMD',
-		secretAccessKey: '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',
+		accessKeyId: 'AKIAZJ5Z5HGA34HJQDOD',
+		secretAccessKey: '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',
 	};
 
 	const upload = (e) => {

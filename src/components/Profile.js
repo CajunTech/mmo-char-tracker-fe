@@ -10,45 +10,59 @@ export default function Profile(props) {
 	const userImages = JSON.parse(localStorage.userImages).data;
 
 	return (
-		<div>
-			<h1>{userData.username}'s Profile Page</h1>
+		<div className="profile">
+			<h1 className="profileTitle">{userData.username}'s Page</h1>
+			<div className="profileTitleBtn">
 			<Link to={'/user/edit'}>
-				<p>Edit Profile</p>
+				<button>Edit Profile</button>
+				<br />
 			</Link>
+			</div>
 			<br />
-			<h2>Character List</h2>
+			<h2 className="profileTitle">Character List</h2>
+			<div className="profileTitleBtn">
 			<Link className="newCharacterLink" to={'/user/newcharacter'}>
-				<p>Add New Character</p>
+				<button >Add New Character</button>
 			</Link>
+			</div>
 			<table className="table table-hover">
 				<thead>
 					<tr>
 						<th scope="col">Character Name</th>
 						<th scope="col">Server</th>
 						<th scope="col">Faction</th>
+						<th scope="col">Biography</th>
 					</tr>
 				</thead>
 				<tbody>
 					{userCharacters.map((character, index) => {
 						return (
 							<tr key={index} className="table-active">
-								<th scope="row">{character.characterName}</th>
+								<Link to={`/character`} onClick={props.setCharacter} >
+								<th id={index} scope="row">{character.characterName}</th>
+								</Link>
 								<td>{character.server}</td>
 								<td>{character.faction}</td>
+								<td>{character.characterBio}</td>
 							</tr>
 						);
 					})}
 				</tbody>
 			</table>
+			<br />
+			<h2 className="profileTitle">Saved Images</h2>
+			<div className="profileTitleBtn">
 			<Link to={'/user/newimage'}>
-				<p>Upload New Image</p>
+				<button >Upload New Image</button>
 			</Link>
+			</div>
+			<br/>
 			<div className="profileImageContainer">
 				{userImages.map((image, index) => {
 					return (
 						<div key={index} className="imageCard">
-							<p>{image.imageName}</p>
-							<img src={image.imageLink} alt=''/>
+							<p className="imageCardTitle">{image.imageName}</p>
+							<img className="imageCardImage" src={image.imageLink} alt=''/>
 						</div>
 					);
 				})}

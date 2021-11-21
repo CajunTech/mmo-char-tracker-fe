@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 export default function Login(props) {
 	if (props.isLoggedIn) {
-		return <Redirect to={'/user/profile'} />;
+		return <Redirect to={'/'} />;
 	}
 	return (
 		<div className="loginPage">

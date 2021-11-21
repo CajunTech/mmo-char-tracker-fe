@@ -1,3 +1,7 @@
+.profile {
+  margin: 0px auto;
+  width: 60%;
+}
 .header {
     height: 60px;
     width: 100%;
@@ -18,3 +22,30 @@
   .navLink {
     text-align: right;
   }
+  .profileImageContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-left: 50px;
+  }
+  .imageCard {
+    width: 300px;
+    height: 300px;
+
+  }
+  .imageCardImage {
+    width: 300px;
+    height: 300px;
+  }
+  .imageCardTitle {
+    font-weight: bold;
+    text-align: center;
+  }
+  .profileTitle {
+    text-align: center;
+  }
+  .profileTitleBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }

@@ -9,6 +9,8 @@ import NewCharacter from './components/NewCharacter';
 import NewImage from './components/NewImage';
 import ProfileEdit from './components/ProfileEdit';
 import Homepage from './components/Homepage';
+import DeleteUser from './components/DeleteUser';
+import CharacterShow from './components/CharacterShow';
 import 'bootswatch/dist/superhero/bootstrap.min.css';
 import './App.css';
 let BASE_URL = '';
@@ -34,12 +36,17 @@ class App extends Component {
 			userCharacters: [],
 			userImages: [],
 			currentImageLink: null,
+			selectedCharacter: null,
+			updateStuff: false,
 		};
 	}
 
 	componentDidMount = () => {
 		this.getProfile();
 		console.log('Component Mount Run');
+	};
+	updateFlag = () => {
+		this.setState({ updateStuff: false });
 	};
 
 	getProfile = async (e) => {
@@ -75,12 +82,7 @@ class App extends Component {
 		};
 		axios
 			.post(`${BASE_URL}/auth/signup`, data)
-			// .then((response) => {
-			// 	this.setState({ token: response.data.token });
-			// })
 			.then((response) => {
-				// const users = response.data;
-				// localStorage.setItem('jwt', users.token);
 				localStorage.setItem('user', response.data.user);
 			})
 			.then(() => {
@@ -127,16 +129,8 @@ class App extends Component {
 			.then(() => {
 				this.getProfile();
 			})
-			// .then(() => {
-			// 	this.setState({ currentUser: this.state.username });
-			// })
-			// .then(() => {
-			// 	this.setState({ username: '' });
-			// 	this.setState({ password: '' });
-			// })
 			.then(() => {
 				this.setState({ isLoggedIn: true });
-				this.delayRedirect('/user/profile');
 			})
 			.catch((error) => {
 				console.log(error);
@@ -147,10 +141,10 @@ class App extends Component {
 		e.preventDefault();
 		localStorage.clear();
 		this.props.history.push('/');
-		// this.setState({ isLoggedIn: false });
-		// this.setState({ currentUser: null });
-		// this.setState({ username: '' });
-		// this.setState({ password: '' });
+		this.setState({ isLoggedIn: false });
+		this.setState({ currentUser: null });
+		this.setState({ username: '' });
+		this.setState({ password: '' });
 	};
 
 	createNewCharacter = (e) => {
@@ -167,7 +161,7 @@ class App extends Component {
 			this.getProfile();
 		});
 	};
-	createNewImage = (e) => {
+	createNewImage = async (e) => {
 		e.preventDefault();
 		console.log(e);
 		const data = {
@@ -176,9 +170,10 @@ class App extends Component {
 			imageName: e.target[0].value,
 			imageCaption: e.target[1].value,
 		};
-		axios.post(`${BASE_URL}/user/newimage`, data).then(() => {
-			this.getProfile();
-		});
+		axios.post(`${BASE_URL}/user/newimage`, data);
+		this.getProfile();
+		this.setState({updateStuff: true})
+		this.props.history.push('/');
 	};
 
 	setImage = (link) => {
@@ -186,13 +181,51 @@ class App extends Component {
 	};
 
 	handleUserEdit = (e) => {
+		e.preventDefault();
 		const data = {
 			displayName: e.target[0].value,
 			email: e.target[1].value,
-			userBio: e.target[2].value
-		}
-		e.preventDefault();
+			userBio: e.target[2].value,
+		};
+		axios.post(`${BASE_URL}/user/profile/edit/${localStorage.user}`, data);
 		console.log(data);
+		this.props.history.push('/');
+	};
+	handleUserDelete = (e) => {
+		e.preventDefault();
+		console.log(e);
+		if (e.target[0].value === localStorage.user) {
+			axios.post(`${BASE_URL}/user/profile/delete/${localStorage.user}`);
+			this.handleLogout(e);
+		} else {
+			alert('Please enter correct input to continue');
+		}
+	};
+
+	setCharacter = (e) => {
+		e.preventDefault();
+		this.setState({ selectedCharacter: e.target.id });
+		console.log(e);
+		this.props.history.push('/character');
+	};
+
+	handleCharacterEdit = (e) => {
+		e.preventDefault();
+		const userCharacters = JSON.parse(localStorage.userCharacters).data;
+		console.log('handleCharacterEdit', e);
+		const data = {
+			characterName: e.target[0].value,
+			server: e.target[1].value,
+			faction: e.target[2].value,
+			characterBio: e.target[3].value,
+		};
+		axios.post(
+			`${BASE_URL}/character/edit/${
+				userCharacters[this.state.selectedCharacter].id
+			}`,
+			data
+		);
+		console.log('sent id', userCharacters[this.state.selectedCharacter].id);
 	};
 
 	render() {
@@ -203,12 +236,19 @@ class App extends Component {
 					handleLogout={this.handleLogout}
 				/>
 				<Route
+					exact
 					path="/"
 					render={(routerProps) => (
-						<Homepage {...routerProps} {...this.state} />
+						<Homepage
+							{...routerProps}
+							{...this.state}
+							getProfile={this.getProfile}
+							updateFlag={this.updateFlag}
+						/>
 					)}
 				/>
 				<Route
+					exact
 					path="/user/signup"
 					render={(routerProps) => (
 						<Signup
@@ -227,10 +267,12 @@ class App extends Component {
 							{...routerProps}
 							{...this.state}
 							getProfile={this.getProfile}
+							setCharacter={this.setCharacter}
 						/>
 					)}
 				/>
 				<Route
+					exact
 					path="/user/edit"
 					render={(routerProps) => (
 						<ProfileEdit
@@ -253,6 +295,7 @@ class App extends Component {
 					)}
 				/>
 				<Route
+					exact
 					path="/user/newcharacter"
 					render={(routerProps) => (
 						<NewCharacter
@@ -263,6 +306,7 @@ class App extends Component {
 					)}
 				/>
 				<Route
+					exact
 					path="/user/newimage"
 					render={(routerProps) => (
 						<NewImage
@@ -270,6 +314,29 @@ class App extends Component {
 							{...this.state}
 							createNewImage={this.createNewImage}
 							setImage={this.setImage}
+						/>
+					)}
+				/>
+				<Route
+					exact
+					path="/user/deleteaccount"
+					render={(routerProps) => (
+						<DeleteUser
+							{...routerProps}
+							{...this.state}
+							handleUserDelete={this.handleUserDelete}
+						/>
+					)}
+				/>
+				<Route
+					exact
+					path="/character"
+					render={(routerProps) => (
+						<CharacterShow
+							{...routerProps}
+							{...this.state}
+							handleCharacterEdit={this.handleCharacterEdit}
+							getProfile={this.getProfile}
 						/>
 					)}
 				/>
