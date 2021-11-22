@@ -7,15 +7,18 @@ export default function NewImage(props) {
 	const config = {
 		bucketName: 'nwchars',
 		region: 'us-east-2',
-		accessKeyId: 'AKIAZJ5Z5HGAUZX5ABO3',
-		secretAccessKey: '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'
+		accessKeyId: process.env.REACT_APP_S3ID,
+		secretAccessKey: process.env.REACT_APP_S3KEY
 	};
 
+	console.log(config)
+	
 	const upload = (e) => {
 		S3FileUpload.uploadFile(e.target.files[0], config)
 			.then((data) => {
+				
 				console.log(data.location);
-				props.setImage(data.location)
+				props.setImageLink(data.location)
 			})
 			.catch((err) => {
 				alert(err);

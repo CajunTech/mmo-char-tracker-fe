@@ -70,7 +70,7 @@ export default function Profile(props) {
 					return (
 						<div key={index} className="imageCard">
 							<p className="imageCardTitle">{image.imageName}</p>
-							<div className="imageCardImage"
+							<div id={index} className="imageCardImage"
 								style={{
 									backgroundImage: `url('${image.imageLink}')`,
 									backgroundPosition: 'center',

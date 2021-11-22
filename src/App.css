@@ -50,7 +50,7 @@
 .profileTitle {
 	text-align: center;
 }
-.profileTitleBtn {
+.profileTitleBtn, .loginBtnContainer {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -63,9 +63,15 @@
 	background-size: cover;
 	background-position: center;
 }
-.characterShowContainer {
-width: 400px;
-margin: 10px auto;
-border: 1px solid black;
-padding-left: 20px;
+.characterShowContainer,
+.changePasswordContainer,
+.profileEditContainer,
+.loginPageContainer {
+	width: 400px;
+	margin: 25px auto;
+	border: 2px solid black;
+	padding-left: 20px;
+}
+.profileEditContainer {
+	width: 500px;
 }

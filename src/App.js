@@ -11,6 +11,7 @@ import ProfileEdit from './components/ProfileEdit';
 import Homepage from './components/Homepage';
 import DeleteUser from './components/DeleteUser';
 import CharacterShow from './components/CharacterShow';
+import ChangePass from './components/ChangePass';
 import 'bootswatch/dist/lumen/bootstrap.min.css';
 import './App.css';
 let BASE_URL = '';
@@ -37,6 +38,7 @@ class App extends Component {
 			userImages: [],
 			currentImageLink: null,
 			selectedCharacter: null,
+			selectedImage: null,
 			updateStuff: false,
 		};
 	}
@@ -134,6 +136,7 @@ class App extends Component {
 			})
 			.catch((error) => {
 				console.log(error);
+				alert('Incorrect username or password')
 			});
 	};
 
@@ -144,7 +147,7 @@ class App extends Component {
 		this.setState({ currentUser: null });
 		this.setState({ username: '' });
 		this.setState({ password: '' });
-		this.setState({updateStuff: true})
+		this.setState({ updateStuff: true });
 		this.props.history.push('/');
 	};
 
@@ -161,7 +164,7 @@ class App extends Component {
 		axios.post(`${BASE_URL}/user/newcharacter`, data).then(() => {
 			this.getProfile();
 		});
-		this.setState({updateStuff: true})
+		this.setState({ updateStuff: true });
 		this.props.history.push('/');
 	};
 	createNewImage = async (e) => {
@@ -175,11 +178,11 @@ class App extends Component {
 		};
 		axios.post(`${BASE_URL}/user/newimage`, data);
 		this.getProfile();
-		this.setState({updateStuff: true})
+		this.setState({ updateStuff: true });
 		this.props.history.push('/');
 	};
 
-	setImage = (link) => {
+	setImageLink = (link) => {
 		this.setState({ currentImageLink: link.split(' ').join('+') });
 	};
 
@@ -205,6 +208,12 @@ class App extends Component {
 		}
 	};
 
+	setImage = (e) => {
+		e.preventDefault();
+		this.setState({ selectedImage: e.target.id });
+		console.log(e);
+		this.props.history.push('/image');
+	}
 	setCharacter = (e) => {
 		e.preventDefault();
 		this.setState({ selectedCharacter: e.target.id });
@@ -229,7 +238,7 @@ class App extends Component {
 			data
 		);
 		console.log('sent id', userCharacters[this.state.selectedCharacter].id);
-		this.setState({updateStuff: true})
+		this.setState({ updateStuff: true });
 		this.props.history.push('/');
 	};
 
@@ -240,10 +249,27 @@ class App extends Component {
 		axios.post(
 			`${BASE_URL}/character/delete/${
 				userCharacters[this.state.selectedCharacter].id
-			}`)
-			this.setState({updateStuff: true})
+			}`
+		);
+		this.setState({ updateStuff: true });
+		this.props.history.push('/');
+	};
+
+	changePassword = (e) => {
+		e.preventDefault();
+		console.log('changepass', e);
+		if (e.target.form[0].value === e.target.form[1].value) {
+			const data = {
+				username: JSON.parse(localStorage.userProfile).data[0].username,
+				password: e.target.form[0].value,
+			};
+			axios.post(`${BASE_URL}/user/changepassword`, data);
+			this.setState({ updateStuff: true });
 			this.props.history.push('/');
-	}
+		} else {
+			alert('Passwords do not match');
+		}
+	};
 
 	render() {
 		return (
@@ -301,6 +327,17 @@ class App extends Component {
 				/>
 				<Route
 					exact
+					path="/user/changepass"
+					render={(routerProps) => (
+						<ChangePass
+							{...routerProps}
+							{...this.state}
+							changePassword={this.changePassword}
+						/>
+					)}
+				/>
+				<Route
+					exact
 					path="/user/login"
 					render={(routerProps) => (
 						<Login
@@ -330,7 +367,7 @@ class App extends Component {
 							{...routerProps}
 							{...this.state}
 							createNewImage={this.createNewImage}
-							setImage={this.setImage}
+							setImageLink={this.setImageLink}
 						/>
 					)}
 				/>
