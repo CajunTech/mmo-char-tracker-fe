@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 function CharacterShow(props) {
 	const userCharacters = JSON.parse(localStorage.userCharacters).data;
 	return (
-		<div>
+		<div className="characterShowContainer">
 			<h1>Character View/Edit:</h1>
 			<br />
 			<form onSubmit={props.handleCharacterEdit}>
@@ -36,17 +36,26 @@ function CharacterShow(props) {
 				<br />
 				<textarea
 					name="characterBio"
+					rows="6"
+					cols="40"
 					type="text"
 					defaultValue={userCharacters[props.selectedCharacter].characterBio}
 				/>
 				<br />
 				<br />
-				<button>Save Changes</button>
+				<button className="characterShowBtn">Save Changes</button>
 			</form>
 			<br />
 			<Link to={'/user/profile'} >
-				<button>Return to Profile</button>
+				<button className="characterShowBtn">Return to Profile</button>
 			</Link>
+			<br />
+			<br />
+			
+				<button onClick={props.deleteCharacter} className="characterShowBtn">Delete Character</button>
+	
+			<br />
+			<br />
 		</div>
 	);
 }

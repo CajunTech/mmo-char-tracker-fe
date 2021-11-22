@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 export default function Header(props) {
 	return (
 		<div className="header">
-			<div className="header">
 				<Link className="mainHeaderLink" to={'/'}>
 					<h1 className="title">New World Character Tracker</h1>
 				</Link>
@@ -14,9 +13,11 @@ export default function Header(props) {
 							<Link className="headerLinks" to={'/user/profile'}>
 								<li className="navLink">Profile</li>
 							</Link>
-							<li className="headerLinks" onClick={props.handleLogout}>
+							<Link className="headerLinks" to={"#"}>
+							<li className="navLink headerLinks" onClick={props.handleLogout}>
 								Logout
 							</li>
+							</Link>
 						</>
 					) : (
 						<>
@@ -29,7 +30,6 @@ export default function Header(props) {
 						</>
 					)}
 				</ul>
-			</div>
 		</div>
 	);
 }

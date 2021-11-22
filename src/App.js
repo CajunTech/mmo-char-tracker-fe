@@ -11,7 +11,7 @@ import ProfileEdit from './components/ProfileEdit';
 import Homepage from './components/Homepage';
 import DeleteUser from './components/DeleteUser';
 import CharacterShow from './components/CharacterShow';
-import 'bootswatch/dist/superhero/bootstrap.min.css';
+import 'bootswatch/dist/lumen/bootstrap.min.css';
 import './App.css';
 let BASE_URL = '';
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -140,11 +140,12 @@ class App extends Component {
 	handleLogout = (e) => {
 		e.preventDefault();
 		localStorage.clear();
-		this.props.history.push('/');
 		this.setState({ isLoggedIn: false });
 		this.setState({ currentUser: null });
 		this.setState({ username: '' });
 		this.setState({ password: '' });
+		this.setState({updateStuff: true})
+		this.props.history.push('/');
 	};
 
 	createNewCharacter = (e) => {
@@ -160,6 +161,8 @@ class App extends Component {
 		axios.post(`${BASE_URL}/user/newcharacter`, data).then(() => {
 			this.getProfile();
 		});
+		this.setState({updateStuff: true})
+		this.props.history.push('/');
 	};
 	createNewImage = async (e) => {
 		e.preventDefault();
@@ -226,7 +229,21 @@ class App extends Component {
 			data
 		);
 		console.log('sent id', userCharacters[this.state.selectedCharacter].id);
+		this.setState({updateStuff: true})
+		this.props.history.push('/');
 	};
+
+	deleteCharacter = (e) => {
+		e.preventDefault();
+		const userCharacters = JSON.parse(localStorage.userCharacters).data;
+		console.log('deleteCharacter', e);
+		axios.post(
+			`${BASE_URL}/character/delete/${
+				userCharacters[this.state.selectedCharacter].id
+			}`)
+			this.setState({updateStuff: true})
+			this.props.history.push('/');
+	}
 
 	render() {
 		return (
@@ -337,6 +354,7 @@ class App extends Component {
 							{...this.state}
 							handleCharacterEdit={this.handleCharacterEdit}
 							getProfile={this.getProfile}
+							deleteCharacter={this.deleteCharacter}
 						/>
 					)}
 				/>

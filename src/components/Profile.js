@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-
-
 export default function Profile(props) {
 	console.log(props.userCharacters.data);
 	const userData = JSON.parse(localStorage.userProfile).data[0];
@@ -11,19 +9,19 @@ export default function Profile(props) {
 
 	return (
 		<div className="profile">
-			<h1 className="profileTitle">{userData.username}'s Page</h1>
+			<h1 className="profileTitle">{userData.username}'s page</h1>
 			<div className="profileTitleBtn">
-			<Link to={'/user/edit'}>
-				<button>Edit Profile</button>
-				<br />
-			</Link>
+				<Link to={'/user/edit'}>
+					<button>Edit Profile</button>
+					<br />
+				</Link>
 			</div>
 			<br />
 			<h2 className="profileTitle">Character List</h2>
 			<div className="profileTitleBtn">
-			<Link className="newCharacterLink" to={'/user/newcharacter'}>
-				<button >Add New Character</button>
-			</Link>
+				<Link className="newCharacterLink" to={'/user/newcharacter'}>
+					<button>Add New Character</button>
+				</Link>
 			</div>
 			<table className="table table-hover">
 				<thead>
@@ -38,9 +36,19 @@ export default function Profile(props) {
 					{userCharacters.map((character, index) => {
 						return (
 							<tr key={index} className="table-active">
-								<Link to={`/character`} onClick={props.setCharacter} >
+								<th id={index} scope="row">
+									<Link
+										to={`/character`}
+										id={index}
+										onClick={props.setCharacter}
+									>
+										{character.characterName}
+									</Link>
+								</th>
+
+								{/* <Link to={`/character`} onClick={props.setCharacter} >
 								<th id={index} scope="row">{character.characterName}</th>
-								</Link>
+								</Link> */}
 								<td>{character.server}</td>
 								<td>{character.faction}</td>
 								<td>{character.characterBio}</td>
@@ -52,17 +60,26 @@ export default function Profile(props) {
 			<br />
 			<h2 className="profileTitle">Saved Images</h2>
 			<div className="profileTitleBtn">
-			<Link to={'/user/newimage'}>
-				<button >Upload New Image</button>
-			</Link>
+				<Link to={'/user/newimage'}>
+					<button>Upload New Image</button>
+				</Link>
 			</div>
-			<br/>
+			<br />
 			<div className="profileImageContainer">
 				{userImages.map((image, index) => {
 					return (
 						<div key={index} className="imageCard">
 							<p className="imageCardTitle">{image.imageName}</p>
-							<img className="imageCardImage" src={image.imageLink} alt=''/>
+							<div className="imageCardImage"
+								style={{
+									backgroundImage: `url('${image.imageLink}')`,
+									backgroundPosition: 'center',
+									backgroundSize: 'cover',
+									backgroundRepeat: 'no-repeat',
+								}}
+							>
+								{/* <img className="imageCardImage" src={image.imageLink} alt="" /> */}
+							</div>
 						</div>
 					);
 				})}

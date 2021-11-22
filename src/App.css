@@ -1,51 +1,71 @@
 .profile {
-  margin: 0px auto;
-  width: 60%;
+	margin: 0px auto;
+	width: 60%;
 }
 .header {
-    height: 60px;
-    width: 100%;
-    background-color: darkgoldenrod;
-    display: flex;
-    border-bottom: 2px solid black;
-    padding-top: 3px;
-    margin-bottom: 10px;
-  }
-  .headerLinks {
-    color: white;
-    text-decoration: none;
-    list-style-type: none; 
-  }  
-  .headerLinks:hover {
-    cursor:pointer;
-  }
-  .navLink {
-    text-align: right;
-  }
-  .profileImageContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 50px;
-    margin-left: 50px;
-  }
-  .imageCard {
-    width: 300px;
-    height: 300px;
-
-  }
-  .imageCardImage {
-    width: 300px;
-    height: 300px;
-  }
-  .imageCardTitle {
-    font-weight: bold;
-    text-align: center;
-  }
-  .profileTitle {
-    text-align: center;
-  }
-  .profileTitleBtn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    }
+	height: 75px;
+	width: 100%;
+	background-color: darkgrey;
+	display: flex;
+	justify-content: center;
+	/* border-bottom: 5px solid black; */
+}
+.mainHeaderLink {
+	padding-top: 10px;
+	text-decoration: none;
+	color: white;
+}
+.navLinks {
+	padding-top: 10px;
+}
+.headerLinks {
+	color: white;
+	text-decoration: none;
+	list-style-type: none;
+}
+.navLink:hover {
+	cursor: pointer;
+}
+.navLink {
+	text-align: right;
+}
+.profileImageContainer {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 50px;
+	margin-left: 50px;
+}
+.imageCard {
+	width: 300px;
+	height: 300px;
+}
+.imageCardImage {
+	width: 300px;
+	height: 300px;
+}
+.imageCardTitle {
+	font-weight: bold;
+	text-align: center;
+}
+.profileTitle {
+	text-align: center;
+}
+.profileTitleBtn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.homepage {
+	min-height: 93vh;
+	min-width: 99vw;
+	background-image: url('./new-world-05.jpeg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+}
+.characterShowContainer {
+width: 400px;
+margin: 10px auto;
+border: 1px solid black;
+padding-left: 20px;
+}
