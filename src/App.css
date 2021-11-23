@@ -8,7 +8,6 @@
 	background-color: darkgrey;
 	display: flex;
 	justify-content: center;
-	/* border-bottom: 5px solid black; */
 }
 .mainHeaderLink {
 	padding-top: 10px;
@@ -50,15 +49,16 @@
 .profileTitle {
 	text-align: center;
 }
-.profileTitleBtn, .loginBtnContainer {
+.profileTitleBtn {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
+
 .homepage {
 	min-height: 93vh;
 	min-width: 99vw;
-	background-image: url('./new-world-05.jpeg');
+	background-image: url("./new-world-05.jpeg");
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
@@ -66,12 +66,33 @@
 .characterShowContainer,
 .changePasswordContainer,
 .profileEditContainer,
-.loginPageContainer {
+.loginPageContainer,
+.imageShowContainer,
+.newCharacterContainer,
+.newImageContainer,
+.signupPageContainer {
 	width: 400px;
 	margin: 25px auto;
 	border: 2px solid black;
 	padding-left: 20px;
 }
-.profileEditContainer {
+.profileEditContainer,
+.newCharacterContainer,
+.newImageContainer {
 	width: 500px;
+}
+.imageCardImage:hover {
+	cursor: pointer;
+}
+.fullImage {
+	display: block;
+	margin: 20px auto;
+	width: 50%;
+}
+button {
+	border-radius: 10px;
+}
+.tableCharacter {
+	/* border: 2px solid black; */
+	text-decoration: none;
 }

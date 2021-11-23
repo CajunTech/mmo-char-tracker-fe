@@ -1,33 +1,35 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react"
 
 function CharacterShow(props) {
-	const userCharacters = JSON.parse(localStorage.userCharacters).data;
+	const userCharacters = JSON.parse(localStorage.userCharacters).data
 	return (
 		<div className="characterShowContainer">
-			<h1>Character View/Edit:</h1>
+			<h2>Character View/Edit:</h2>
 			<br />
 			<form onSubmit={props.handleCharacterEdit}>
-				<label>Name: </label>
+				<label>Name: </label> <br />
 				<input
 					name="characterName"
 					type="text"
+					size="35"
 					defaultValue={userCharacters[props.selectedCharacter].characterName}
 				/>
 				<br />
 				<br />
-				<label>Server: </label>
+				<label>Server: </label> <br />
 				<input
 					name="server"
 					type="text"
+					size="35"
 					defaultValue={userCharacters[props.selectedCharacter].server}
 				/>
 				<br />
 				<br />
-				<label>Faction: </label>
+				<label>Faction: </label> <br />
 				<input
 					name="faction"
 					type="text"
+					size="35"
 					defaultValue={userCharacters[props.selectedCharacter].faction}
 				/>
 				<br />
@@ -46,18 +48,14 @@ function CharacterShow(props) {
 				<button className="characterShowBtn">Save Changes</button>
 			</form>
 			<br />
-			<Link to={'/user/profile'} >
-				<button className="characterShowBtn">Return to Profile</button>
-			</Link>
-			<br />
-			<br />
-			
-				<button onClick={props.deleteCharacter} className="characterShowBtn">Delete Character</button>
-	
+			<button onClick={props.deleteCharacter} className="characterShowBtn">
+				Delete Character
+			</button>
+
 			<br />
 			<br />
 		</div>
-	);
+	)
 }
 
-export default CharacterShow;
+export default CharacterShow

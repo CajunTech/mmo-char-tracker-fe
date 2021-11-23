@@ -5,14 +5,15 @@ const config = {
     bucketName: 'nwchars',
     // dirName: '',
     region: 'us-east-2',
-    accessKeyId: 'AKIAZJ5Z5HGAS742ZQMD',
-    secretAccessKey: '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'
+    accessKeyId: process.env.REACT_APP_S3ID,
+    secretAccessKey: process.env.REACT_APP_S3KEY
 }
 
 const upload = (e) => {
 	S3FileUpload.uploadFile(e.target.files[0], config)
 		.then((data) => {
 			console.log(data.location);
+			props.setImageLink(data.location)
 		})
 		.catch((err) => {
 			alert(err);

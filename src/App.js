@@ -1,38 +1,39 @@
-import React, { Component } from 'react';
-import { Route, withRouter } from 'react-router-dom';
-import axios from 'axios';
-import Header from './components/Header';
-import Signup from './components/Signup';
-import Profile from './components/Profile';
-import Login from './components/Login';
-import NewCharacter from './components/NewCharacter';
-import NewImage from './components/NewImage';
-import ProfileEdit from './components/ProfileEdit';
-import Homepage from './components/Homepage';
-import DeleteUser from './components/DeleteUser';
-import CharacterShow from './components/CharacterShow';
-import ChangePass from './components/ChangePass';
-import 'bootswatch/dist/lumen/bootstrap.min.css';
-import './App.css';
-let BASE_URL = '';
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-	BASE_URL = 'http://localhost:3000';
+import React, { Component } from "react"
+import { Route, withRouter } from "react-router-dom"
+import axios from "axios"
+import Header from "./components/Header"
+import Signup from "./components/Signup"
+import Profile from "./components/Profile"
+import Login from "./components/Login"
+import NewCharacter from "./components/NewCharacter"
+import NewImage from "./components/NewImage"
+import ProfileEdit from "./components/ProfileEdit"
+import Homepage from "./components/Homepage"
+import DeleteUser from "./components/DeleteUser"
+import CharacterShow from "./components/CharacterShow"
+import ChangePass from "./components/ChangePass"
+import ImageShow from "./components/ImageShow"
+import "bootswatch/dist/lumen/bootstrap.min.css"
+import "./App.css"
+let BASE_URL = ""
+if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+	BASE_URL = "http://localhost:3000"
 } else {
-	BASE_URL = 'https://nw-chars.herokuapp.com';
+	BASE_URL = "https://nw-chars.herokuapp.com"
 }
 
 class App extends Component {
 	constructor() {
-		super();
+		super()
 		this.state = {
-			username: '',
-			password: '',
-			confirmedPassword: '',
-			token: '',
+			username: "",
+			password: "",
+			confirmedPassword: "",
+			token: "",
 			userData: {},
 			isLoggedIn: false,
 			currentUser: null,
-			displayName: '',
+			displayName: "",
 			userProfile: null,
 			userCharacters: [],
 			userImages: [],
@@ -40,116 +41,121 @@ class App extends Component {
 			selectedCharacter: null,
 			selectedImage: null,
 			updateStuff: false,
-		};
+		}
 	}
 
 	componentDidMount = () => {
-		this.getProfile();
-		console.log('Component Mount Run');
-	};
+		this.getProfile()
+		console.log("Component Mount Run")
+	}
 	updateFlag = () => {
-		this.setState({ updateStuff: false });
-	};
+		this.setState({ updateStuff: false })
+	}
 
 	getProfile = async (e) => {
 		const [userProfile, userCharacters, userImages] = await Promise.all([
 			axios.get(`${BASE_URL}/user/profile/${localStorage.user}`),
 			axios.get(`${BASE_URL}/user/characters/${localStorage.user}`),
 			axios.get(`${BASE_URL}/user/images/${localStorage.user}`),
-		]);
+		])
 		this.setState({
 			userProfile: userProfile,
 			userCharacters: userCharacters,
 			userImages: userImages,
-		});
-		localStorage.setItem('userProfile', JSON.stringify(userProfile));
-		localStorage.setItem('userCharacters', JSON.stringify(userCharacters));
-		localStorage.setItem('userImages', JSON.stringify(userImages));
-		// console.log("str", localStorage.userProfile)
-		console.log('userProfile', JSON.parse(localStorage.userProfile));
-		console.log('userCharacters', JSON.parse(localStorage.userCharacters).data);
-		console.log('userImages', JSON.parse(localStorage.userImages).data);
-	};
+		})
+		localStorage.setItem("userProfile", JSON.stringify(userProfile))
+		localStorage.setItem("userCharacters", JSON.stringify(userCharacters))
+		localStorage.setItem("userImages", JSON.stringify(userImages))
+		console.log("userProfile", JSON.parse(localStorage.userProfile))
+		console.log("userCharacters", JSON.parse(localStorage.userCharacters).data)
+		console.log("userImages", JSON.parse(localStorage.userImages).data)
+	}
 
 	handleChange = (e) => {
-		this.setState({ ...this.state, [e.target.name]: e.target.value });
-	};
+		this.setState({ ...this.state, [e.target.name]: e.target.value })
+	}
 
 	handleSignup = (e) => {
-		e.preventDefault();
-		const data = {
-			username: this.state.username,
-			password: this.state.password,
-			displayName: this.state.displayName,
-		};
-		axios
-			.post(`${BASE_URL}/auth/signup`, data)
-			.then((response) => {
-				localStorage.setItem('user', response.data.user);
-			})
-			.then(() => {
-				this.getProfile();
-			})
-			.then(() => {
-				this.setState({ currentUser: this.state.username });
-			})
-			.then(() => {
-				this.setState({ username: '' });
-				this.setState({ password: '' });
-			})
-			.then(() => {
-				this.setState({ isLoggedIn: true });
-			})
-			.then(() => {
-				this.getProfile();
-			})
-			.catch((error) => {
-				console.log(BASE_URL);
-				console.log(error);
-			});
-	};
+		e.preventDefault()
+		if (this.state.password === this.state.confirmedPassword) {
+			const data = {
+				username: this.state.username,
+				password: this.state.password,
+				displayName: this.state.displayName,
+			}
+			axios
+				.post(`${BASE_URL}/auth/signup`, data)
+				.then((response) => {
+					localStorage.setItem("user", response.data.user)
+				})
+				.then(() => {
+					this.getProfile()
+				})
+				.then(() => {
+					// this.setState({ currentUser: this.state.username })
+					this.setState({ updateStuff: true })
+				})
+				.then(() => {
+					this.setState({ username: "" })
+					this.setState({ password: "" })
+				})
+				// .then(() => {
+				// this.setState({ isLoggedIn: true });
+
+				// })
+				.then(() => {
+					this.props.history.push("/")
+				})
+				.catch((error) => {
+					console.log(BASE_URL)
+					console.log(error)
+				})
+		} else {
+			alert("Passwords do not match")
+		}
+	}
 
 	delayRedirect = (link) => {
 		const {
 			history: { push },
-		} = this.props;
-		link.preventDefault();
-		setTimeout(() => push(link), 2000);
-	};
+		} = this.props
+		link.preventDefault()
+		setTimeout(() => push(link), 2000)
+	}
 
 	handleLogin = (e) => {
-		e.preventDefault();
+		e.preventDefault()
 		const data = {
 			username: this.state.username,
 			password: this.state.password,
-		};
+		}
 		axios
 			.post(`${BASE_URL}/auth/login`, data)
 			.then((response) => {
-				localStorage.setItem('user', response.data.user);
+				localStorage.setItem("user", response.data.user)
 			})
 			.then(() => {
-				this.getProfile();
+				this.getProfile()
 			})
 			.then(() => {
-				this.setState({ isLoggedIn: true });
+				this.setState({ isLoggedIn: true })
 			})
 			.catch((error) => {
-				console.log(error);
-				alert('Incorrect username or password')
-			});
-	};
+				console.log(error)
+				alert("Incorrect username or password")
+			})
+	}
 
 	handleLogout = (e) => {
-		e.preventDefault();
-		localStorage.clear();
-		this.setState({ isLoggedIn: false });
-		this.setState({ currentUser: null });
-		this.setState({ username: '' });
-		this.setState({ password: '' });
-		this.setState({ updateStuff: true });
-		this.props.history.push('/');
-	};
+		e.preventDefault()
+		localStorage.clear()
+		this.setState({ isLoggedIn: false })
+		this.setState({ currentUser: null })
+		this.setState({ username: "" })
+		this.setState({ password: "" })
+		this.setState({ updateStuff: true })
+		this.props.history.push("/")
+	}
 
 	createNewCharacter = (e) => {
 		const data = {
@@ -158,118 +164,147 @@ class App extends Component {
 			server: e.target[2].value,
 			faction: e.target[3].value,
 			characterBio: e.target[4].value,
-		};
-		console.log(data);
-		e.preventDefault();
+		}
+		console.log(data)
+		e.preventDefault()
 		axios.post(`${BASE_URL}/user/newcharacter`, data).then(() => {
-			this.getProfile();
-		});
-		this.setState({ updateStuff: true });
-		this.props.history.push('/');
-	};
+			this.getProfile()
+		})
+		this.setState({ updateStuff: true })
+		this.props.history.push("/")
+	}
 	createNewImage = async (e) => {
-		e.preventDefault();
-		console.log(e);
+		e.preventDefault()
+		console.log(e)
 		const data = {
 			imageOwner: localStorage.user,
 			imageLink: this.state.currentImageLink,
 			imageName: e.target[0].value,
 			imageCaption: e.target[1].value,
-		};
-		axios.post(`${BASE_URL}/user/newimage`, data);
-		this.getProfile();
-		this.setState({ updateStuff: true });
-		this.props.history.push('/');
-	};
+		}
+		axios.post(`${BASE_URL}/user/newimage`, data)
+		this.getProfile()
+		this.setState({ updateStuff: true })
+		this.props.history.push("/")
+	}
 
 	setImageLink = (link) => {
-		this.setState({ currentImageLink: link.split(' ').join('+') });
-	};
+		this.setState({ currentImageLink: link.split(" ").join("+") })
+	}
 
 	handleUserEdit = (e) => {
-		e.preventDefault();
+		e.preventDefault()
 		const data = {
 			displayName: e.target[0].value,
 			email: e.target[1].value,
 			userBio: e.target[2].value,
-		};
-		axios.post(`${BASE_URL}/user/profile/edit/${localStorage.user}`, data);
-		console.log(data);
-		this.props.history.push('/');
-	};
-	handleUserDelete = (e) => {
-		e.preventDefault();
-		console.log(e);
-		if (e.target[0].value === localStorage.user) {
-			axios.post(`${BASE_URL}/user/profile/delete/${localStorage.user}`);
-			this.handleLogout(e);
-		} else {
-			alert('Please enter correct input to continue');
 		}
-	};
+		axios.post(`${BASE_URL}/user/profile/edit/${localStorage.user}`, data)
+		console.log(data)
+		this.setState({ updateStuff: true })
+		this.props.history.push("/")
+	}
+	handleUserDelete = (e) => {
+		e.preventDefault()
+		console.log(e)
+		if (e.target[0].value === localStorage.user) {
+			axios.post(`${BASE_URL}/user/profile/delete/${localStorage.user}`)
+			this.handleLogout(e)
+		} else {
+			alert("Please enter correct input to continue")
+		}
+	}
 
 	setImage = (e) => {
-		e.preventDefault();
-		this.setState({ selectedImage: e.target.id });
-		console.log(e);
-		this.props.history.push('/image');
+		e.preventDefault()
+		this.setState({ selectedImage: e.target.id })
+		console.log(e)
+		this.props.history.push("/image")
 	}
 	setCharacter = (e) => {
-		e.preventDefault();
-		this.setState({ selectedCharacter: e.target.id });
-		console.log(e);
-		this.props.history.push('/character');
-	};
+		e.preventDefault()
+		this.setState({ selectedCharacter: e.target.id })
+		console.log(e)
+		this.props.history.push("/character")
+	}
 
 	handleCharacterEdit = (e) => {
-		e.preventDefault();
-		const userCharacters = JSON.parse(localStorage.userCharacters).data;
-		console.log('handleCharacterEdit', e);
+		e.preventDefault()
+		const userCharacters = JSON.parse(localStorage.userCharacters).data
+		console.log("handleCharacterEdit", e)
 		const data = {
 			characterName: e.target[0].value,
 			server: e.target[1].value,
 			faction: e.target[2].value,
 			characterBio: e.target[3].value,
-		};
+		}
 		axios.post(
 			`${BASE_URL}/character/edit/${
 				userCharacters[this.state.selectedCharacter].id
 			}`,
 			data
-		);
-		console.log('sent id', userCharacters[this.state.selectedCharacter].id);
-		this.setState({ updateStuff: true });
-		this.props.history.push('/');
-	};
+		)
+		console.log("char sent id", userCharacters[this.state.selectedCharacter].id)
+		this.setState({ updateStuff: true })
+		this.props.history.push("/")
+	}
+
+	handleImageEdit = (e) => {
+		e.preventDefault()
+		const userImages = JSON.parse(localStorage.userImages).data
+		console.log("handleImageEdit", e)
+		const data = {
+			imageName: e.target[0].value,
+			imageCaption: e.target[1].value,
+		}
+		axios.post(
+			`${BASE_URL}/image/edit/${userImages[this.state.selectedImage].id}`,
+			data
+		)
+		console.log("image sent id", userImages[this.state.selectedImage].id)
+		this.setState({ updateStuff: true })
+		this.props.history.push("/")
+	}
+
+	deleteImage = (e) => {
+		e.preventDefault()
+		const userImages = JSON.parse(localStorage.userImages).data
+		console.log("deleteImage", e)
+		axios.post(
+			`${BASE_URL}/image/delete/${userImages[this.state.selectedImage].id}`
+		)
+		this.setState({ updateStuff: true })
+		this.props.history.push("/")
+	}
 
 	deleteCharacter = (e) => {
-		e.preventDefault();
-		const userCharacters = JSON.parse(localStorage.userCharacters).data;
-		console.log('deleteCharacter', e);
+		e.preventDefault()
+		const userCharacters = JSON.parse(localStorage.userCharacters).data
+		console.log("deleteCharacter", e)
 		axios.post(
 			`${BASE_URL}/character/delete/${
 				userCharacters[this.state.selectedCharacter].id
 			}`
-		);
-		this.setState({ updateStuff: true });
-		this.props.history.push('/');
-	};
+		)
+		this.setState({ updateStuff: true })
+		this.props.history.push("/")
+	}
 
 	changePassword = (e) => {
-		e.preventDefault();
-		console.log('changepass', e);
+		e.preventDefault()
+		console.log("changepass", e)
 		if (e.target.form[0].value === e.target.form[1].value) {
 			const data = {
 				username: JSON.parse(localStorage.userProfile).data[0].username,
 				password: e.target.form[0].value,
-			};
-			axios.post(`${BASE_URL}/user/changepassword`, data);
-			this.setState({ updateStuff: true });
-			this.props.history.push('/');
+			}
+			axios.post(`${BASE_URL}/user/changepassword`, data)
+			this.setState({ updateStuff: true })
+			this.props.history.push("/")
 		} else {
-			alert('Passwords do not match');
+			alert("Passwords do not match")
 		}
-	};
+	}
 
 	render() {
 		return (
@@ -311,6 +346,7 @@ class App extends Component {
 							{...this.state}
 							getProfile={this.getProfile}
 							setCharacter={this.setCharacter}
+							setImage={this.setImage}
 						/>
 					)}
 				/>
@@ -395,9 +431,21 @@ class App extends Component {
 						/>
 					)}
 				/>
+				<Route
+					exact
+					path="/image"
+					render={(routerProps) => (
+						<ImageShow
+							{...routerProps}
+							{...this.state}
+							handleImageEdit={this.handleImageEdit}
+							deleteImage={this.deleteImage}
+						/>
+					)}
+				/>
 			</div>
-		);
+		)
 	}
 }
 
-export default withRouter(App);
+export default withRouter(App)
