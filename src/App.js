@@ -31,8 +31,6 @@ class App extends Component {
 			confirmedPassword: "",
 			token: "",
 			userData: {},
-			isLoggedIn: false,
-			currentUser: null,
 			displayName: "",
 			userProfile: null,
 			userCharacters: [],
@@ -46,7 +44,7 @@ class App extends Component {
 
 	componentDidMount = () => {
 		this.getProfile()
-		}
+	}
 
 	updateFlag = () => {
 		this.setState({ updateStuff: false })
@@ -62,12 +60,12 @@ class App extends Component {
 			userProfile: userProfile,
 			userCharacters: userCharacters,
 			userImages: userImages,
-			updateStuff: false
+			updateStuff: false,
 		})
 		localStorage.setItem("userProfile", JSON.stringify(userProfile))
 		localStorage.setItem("userCharacters", JSON.stringify(userCharacters))
 		localStorage.setItem("userImages", JSON.stringify(userImages))
-			}
+	}
 
 	handleChange = (e) => {
 		this.setState({ ...this.state, [e.target.name]: e.target.value })
@@ -90,7 +88,7 @@ class App extends Component {
 					this.getProfile()
 				})
 				.then(() => {
-				this.setState({ updateStuff: true })
+					this.setState({ updateStuff: true })
 				})
 				.then(() => {
 					this.setState({ username: "" })
@@ -121,9 +119,6 @@ class App extends Component {
 			.then(() => {
 				this.getProfile()
 			})
-			.then(() => {
-				this.setState({ isLoggedIn: true })
-			})
 			.catch((error) => {
 				console.log(error)
 				alert("Incorrect username or password")
@@ -133,8 +128,6 @@ class App extends Component {
 	handleLogout = (e) => {
 		e.preventDefault()
 		localStorage.clear()
-		this.setState({ isLoggedIn: false })
-		this.setState({ currentUser: null })
 		this.setState({ username: "" })
 		this.setState({ password: "" })
 		this.setState({ updateStuff: true })
@@ -149,7 +142,6 @@ class App extends Component {
 			faction: e.target[3].value,
 			characterBio: e.target[4].value,
 		}
-		console.log(data)
 		e.preventDefault()
 		axios.post(`${BASE_URL}/user/newcharacter`, data).then(() => {
 			this.getProfile()
@@ -159,7 +151,6 @@ class App extends Component {
 	}
 	createNewImage = async (e) => {
 		e.preventDefault()
-		console.log(e)
 		const data = {
 			imageOwner: localStorage.user,
 			imageLink: this.state.currentImageLink,
@@ -282,10 +273,7 @@ class App extends Component {
 	render() {
 		return (
 			<div className="App">
-				<Header
-					isLoggedIn={this.state.isLoggedIn}
-					handleLogout={this.handleLogout}
-				/>
+				<Header handleLogout={this.handleLogout} />
 				<Route
 					exact
 					path="/"
@@ -294,7 +282,6 @@ class App extends Component {
 							{...routerProps}
 							{...this.state}
 							getProfile={this.getProfile}
-							updateFlag={this.updateFlag}
 						/>
 					)}
 				/>
