@@ -6,7 +6,7 @@ Link to application - https://nw-char.surge.sh/
 <br>
 
 # Technologies used:</br>
-React, Node.js, PostgreSQL, JavaScript, CSS (Bootstrap), Sequelize ORM, Amazon S3, Surge and Heroku for hosting
+React, Node.js, PostgreSQL, JavaScript, CSS (Bootstrap), Sequelize ORM, bcrypt, Amazon S3, Surge and Heroku for hosting
 <br>
 
 # Reason for application and approach:
@@ -38,70 +38,74 @@ User Stories:
 - User profile page showing user's characters and images
 - Amazon S3 integration*
 - Local Storage utilization*
+- Fieldset, data-list, options usage*
 <br>
 
-User profile (contributed/favorite) sample:
+Sample view/edit screens:
 <br>
-![recipeshare_profile](https://user-images.githubusercontent.com/89054252/137161720-098786b3-b8fe-487f-aed3-28a6fbe44a62.png)
-<br>
-Code snippet of dynamic Favorite, Edit, and Delete button creation:
+Character view/edit            |  User view/edit
+:-------------------------:|:-------------------------:
+![characterviewedit](https://user-images.githubusercontent.com/89054252/142976544-bbc92349-e627-4aae-951a-01bae427b916.png)  |  ![userviewedit](https://user-images.githubusercontent.com/89054252/142976665-b3e94655-f41a-4285-82e3-47bd23ab8b40.png)
+
+# Code snippets
+Pull user related data from DB to Local Storage
 ```js
-      <% if (!isFavorite) { %>
-        <form action="/recipes/<%=recipe.id%>/favorites?_method=PUT" method="POST">
-        <input class="btn btn-primary" type="submit" value="Add to Favorites" />
-        </form>
-        <%}%>
-      <% if (recipe.author === amAuthor || amAdmin === 'admin') { %>
-    <a href='/recipes/<%=recipe.id%>/edit'><input class="btn btn-primary" type="button" value='Edit Recipe'/></a> 
-    <form action="/recipes/<%=recipe.id%>?_method=DELETE" method="POST">
-      <input class="btn btn-primary" type="submit" value="Delete Recipe" />
-  </form> 
-  <% } %>
+getProfile = async (e) => {
+		const [userProfile, userCharacters, userImages] = await Promise.all([
+			axios.get(`${BASE_URL}/user/profile/${localStorage.user}`),
+			axios.get(`${BASE_URL}/user/characters/${localStorage.user}`),
+			axios.get(`${BASE_URL}/user/images/${localStorage.user}`),
+		])
+		this.setState({
+			userProfile: userProfile,
+			userCharacters: userCharacters,
+			userImages: userImages,
+			updateStuff: false,
+		})
+		localStorage.setItem("userProfile", JSON.stringify(userProfile))
+		localStorage.setItem("userCharacters", JSON.stringify(userCharacters))
+		localStorage.setItem("userImages", JSON.stringify(userImages))
+	}
   ```
-  Code snippets of dynamic step creation of recipes (users are asked to press enter after each step when creating/editing a recipe):
+  Maps game's server list (approximately 400) to a searchable datalist
   ```js
-    let instruction = recipe.instructions.split('\n');
-	let ingredient = recipe.ingredients.split('\n');
-	res.render('recipes/show.ejs', {
-		recipe,
-		instruction,
-		ingredient,
+  function NewCharacter(props) {
+	const serverList = data.map((server, index) => (
+		<option value={server} key={index} />
+	))
+
+	<datalist id="server-list">{serverList}</datalist>
  ```
+ Allows for upload of image files to Amazon S3 bucket
  ```js
- <h2>Ingredients:</h2>
-<hr style="max-width:600px;">
-<div>
-  <ul>
-  <% for (i=0; i<ingredient.length; i++) { %>
-    <li style='list-style-type:none'><%= ingredient[i] %></li> 
-    <% } %>
-    </ul>
-</div>
-<h2>Instructions:</h2>
-<hr style="max-width:600px;">
-<div>
-  <% for (i=0; i<instruction.length; i++) { %>
-    <p><span style="font-weight: bold">Step <%=i+1%> :</span><%= instruction[i] %></p> 
-    <% } %>
-</div>
+	// https://www.npmjs.com/package/react-s3 - S3 File Upload Information
+	const upload = (e) => {
+		S3FileUpload.uploadFile(e.target.files[0], config)
+			.then((data) => {
+				// recording image url to state for database add
+				props.setImageLink(data.location)
+			})
+			.catch((err) => {
+				alert(err)
+			})
+	}
 ```
 <br>
 
 # Known issues:
-- When working with a recipe that has text, but no link (missing \ or http:\\ at beginning) get a strange error in server console where a sequel statement ends with recipe.id = image field text. This does not occur when the text in image field begins with \ or http:\\ even if it is not a valid link. In this case the recipe.id = the actual integer recipe UID. All items continue to function fine in either instance.
+- Timing issues with functions calling local storage sometimes require refreshes to get correct data
+- Some information stored in local storage is not needed
 
 <br>
 
 
 # What's left:
-- Allow users to logout of application.
-- Allow admin to edit/delete users.
-- Allow filtering by cuisine and recipe author.
-- Add search functionality
-- Add recipe rating system
-- Replace password entry with asterisks on relative fields
-</br>
-</br>
+- Revisit JSON Web Tokens
+- Revisit state vs local storage
+- Allow for users to flag images and characters for public visibility
+- Allow like/favorite of images and characters
+- Investigate rating system for images
+- Investigate inclusion of other games or removal of New World specific settings
 </br>
 </br>
 </br>
