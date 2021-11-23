@@ -1,4 +1,12 @@
 # New World Character Tracker
+Frontend for New World Character Tracker
+<br>
+Backend Repo - https://github.com/CajunTech/mmo-char-tracker-fe
+<br>
+Backend Readme - https://github.com/CajunTech/mmo-char-tracker-be/blob/main/README.md
+<br>
+<br>
+
 ![nwcharmain](https://user-images.githubusercontent.com/89054252/142974415-a463eb5d-66e8-44ba-bfd1-a907d81f033c.png)
 
 
