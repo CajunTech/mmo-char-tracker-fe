@@ -1,70 +1,111 @@
-# Getting Started with Create React App
+# New World Character Tracker
+![nwcharmain](https://user-images.githubusercontent.com/89054252/142974415-a463eb5d-66e8-44ba-bfd1-a907d81f033c.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+Link to application - https://nw-char.surge.sh/
+<br>
 
-In the project directory, you can run:
+# Technologies used:</br>
+React, Node.js, PostgreSQL, JavaScript, CSS (Bootstrap), Sequelize ORM, Amazon S3, Surge and Heroku for hosting
+<br>
 
-### `npm start`
+# Reason for application and approach:
+New World is a game released by Amazon in October 2021. This application was designed to allow players of New World to keep character information, screenshots, etc. with the intent of having a site to display transmogs like many other MMOs once they are introduced to the game. I started out with a focus on authentication, encryption and JSON Web Tokens. I ran into issues with JSON Web Tokens and then began to leverage local storage (first time using) in an attempt to handle some form of user/state persistance on page revisits and refreshes. I was able to build in CRUD functionality for all three aspects (users, characters, images) of the current application and leveraged Amazon S3 for image storage. 
+<br>
+<br>
+ERD:
+<br>
+![nwcharerd](https://user-images.githubusercontent.com/89054252/142975615-e42fecea-5bd7-44a9-b47b-12287eb62271.png)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+</br>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+User Stories:
+- As a User I would like the ability to create account.
+- As a User I would like the ability to login to application.
+- As a User I would like the ability to edit my account details.
+- As a User I would like the ability to delete account.
+- As a User I would like the ability to create characters.
+- As a User I would like the ability to edit my characters.
+- As a User I would like the ability to delete my characters.
+- As a User I would like the ability to easily view and access characters I have created.
+- As a User I would like the ability to create images.
+- As a User I would like the ability to edit my images.
+- As a User I would like the ability to delete my images.
+- As a User I would like the ability to easily view and access images I have created.
+<br>
 
-### `npm test`
+# Main features (* denotes first time using):
+- User profile page showing user's characters and images
+- Amazon S3 integration*
+- Local Storage utilization*
+<br>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+User profile (contributed/favorite) sample:
+<br>
+![recipeshare_profile](https://user-images.githubusercontent.com/89054252/137161720-098786b3-b8fe-487f-aed3-28a6fbe44a62.png)
+<br>
+Code snippet of dynamic Favorite, Edit, and Delete button creation:
+```js
+      <% if (!isFavorite) { %>
+        <form action="/recipes/<%=recipe.id%>/favorites?_method=PUT" method="POST">
+        <input class="btn btn-primary" type="submit" value="Add to Favorites" />
+        </form>
+        <%}%>
+      <% if (recipe.author === amAuthor || amAdmin === 'admin') { %>
+    <a href='/recipes/<%=recipe.id%>/edit'><input class="btn btn-primary" type="button" value='Edit Recipe'/></a> 
+    <form action="/recipes/<%=recipe.id%>?_method=DELETE" method="POST">
+      <input class="btn btn-primary" type="submit" value="Delete Recipe" />
+  </form> 
+  <% } %>
+  ```
+  Code snippets of dynamic step creation of recipes (users are asked to press enter after each step when creating/editing a recipe):
+  ```js
+    let instruction = recipe.instructions.split('\n');
+	let ingredient = recipe.ingredients.split('\n');
+	res.render('recipes/show.ejs', {
+		recipe,
+		instruction,
+		ingredient,
+ ```
+ ```js
+ <h2>Ingredients:</h2>
+<hr style="max-width:600px;">
+<div>
+  <ul>
+  <% for (i=0; i<ingredient.length; i++) { %>
+    <li style='list-style-type:none'><%= ingredient[i] %></li> 
+    <% } %>
+    </ul>
+</div>
+<h2>Instructions:</h2>
+<hr style="max-width:600px;">
+<div>
+  <% for (i=0; i<instruction.length; i++) { %>
+    <p><span style="font-weight: bold">Step <%=i+1%> :</span><%= instruction[i] %></p> 
+    <% } %>
+</div>
+```
+<br>
 
-### `npm run build`
+# Known issues:
+- When working with a recipe that has text, but no link (missing \ or http:\\ at beginning) get a strange error in server console where a sequel statement ends with recipe.id = image field text. This does not occur when the text in image field begins with \ or http:\\ even if it is not a valid link. In this case the recipe.id = the actual integer recipe UID. All items continue to function fine in either instance.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# What's left:
+- Allow users to logout of application.
+- Allow admin to edit/delete users.
+- Allow filtering by cuisine and recipe author.
+- Add search functionality
+- Add recipe rating system
+- Replace password entry with asterisks on relative fields
+</br>
+</br>
+</br>
+</br>
+</br>
+This website may contain copyrighted material, the use of which may not have been specifically authorized by the copyright owner. The material contained in this website is distributed without profit for research and educational purposes.
+This should constitute a ‘fair use’ of any such copyrighted material (referenced and provided for in section 107 of the US Copyright Law).
+If you wish to use any copyrighted material from this site for purposes of your own that go beyond ‘fair use’, you must obtain expressed permission from the copyright owner.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
