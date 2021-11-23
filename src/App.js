@@ -40,14 +40,14 @@ class App extends Component {
 			currentImageLink: null,
 			selectedCharacter: null,
 			selectedImage: null,
-			updateStuff: false,
+			updateStuff: true,
 		}
 	}
 
 	componentDidMount = () => {
 		this.getProfile()
-		console.log("Component Mount Run")
-	}
+		}
+
 	updateFlag = () => {
 		this.setState({ updateStuff: false })
 	}
@@ -62,14 +62,12 @@ class App extends Component {
 			userProfile: userProfile,
 			userCharacters: userCharacters,
 			userImages: userImages,
+			updateStuff: false
 		})
 		localStorage.setItem("userProfile", JSON.stringify(userProfile))
 		localStorage.setItem("userCharacters", JSON.stringify(userCharacters))
 		localStorage.setItem("userImages", JSON.stringify(userImages))
-		console.log("userProfile", JSON.parse(localStorage.userProfile))
-		console.log("userCharacters", JSON.parse(localStorage.userCharacters).data)
-		console.log("userImages", JSON.parse(localStorage.userImages).data)
-	}
+			}
 
 	handleChange = (e) => {
 		this.setState({ ...this.state, [e.target.name]: e.target.value })
@@ -92,35 +90,21 @@ class App extends Component {
 					this.getProfile()
 				})
 				.then(() => {
-					// this.setState({ currentUser: this.state.username })
-					this.setState({ updateStuff: true })
+				this.setState({ updateStuff: true })
 				})
 				.then(() => {
 					this.setState({ username: "" })
 					this.setState({ password: "" })
 				})
-				// .then(() => {
-				// this.setState({ isLoggedIn: true });
-
-				// })
 				.then(() => {
 					this.props.history.push("/")
 				})
 				.catch((error) => {
-					console.log(BASE_URL)
 					console.log(error)
 				})
 		} else {
 			alert("Passwords do not match")
 		}
-	}
-
-	delayRedirect = (link) => {
-		const {
-			history: { push },
-		} = this.props
-		link.preventDefault()
-		setTimeout(() => push(link), 2000)
 	}
 
 	handleLogin = (e) => {
@@ -200,13 +184,11 @@ class App extends Component {
 			userBio: e.target[2].value,
 		}
 		axios.post(`${BASE_URL}/user/profile/edit/${localStorage.user}`, data)
-		console.log(data)
 		this.setState({ updateStuff: true })
 		this.props.history.push("/")
 	}
 	handleUserDelete = (e) => {
 		e.preventDefault()
-		console.log(e)
 		if (e.target[0].value === localStorage.user) {
 			axios.post(`${BASE_URL}/user/profile/delete/${localStorage.user}`)
 			this.handleLogout(e)
@@ -218,20 +200,17 @@ class App extends Component {
 	setImage = (e) => {
 		e.preventDefault()
 		this.setState({ selectedImage: e.target.id })
-		console.log(e)
 		this.props.history.push("/image")
 	}
 	setCharacter = (e) => {
 		e.preventDefault()
 		this.setState({ selectedCharacter: e.target.id })
-		console.log(e)
 		this.props.history.push("/character")
 	}
 
 	handleCharacterEdit = (e) => {
 		e.preventDefault()
 		const userCharacters = JSON.parse(localStorage.userCharacters).data
-		console.log("handleCharacterEdit", e)
 		const data = {
 			characterName: e.target[0].value,
 			server: e.target[1].value,
@@ -244,7 +223,6 @@ class App extends Component {
 			}`,
 			data
 		)
-		console.log("char sent id", userCharacters[this.state.selectedCharacter].id)
 		this.setState({ updateStuff: true })
 		this.props.history.push("/")
 	}
@@ -252,7 +230,6 @@ class App extends Component {
 	handleImageEdit = (e) => {
 		e.preventDefault()
 		const userImages = JSON.parse(localStorage.userImages).data
-		console.log("handleImageEdit", e)
 		const data = {
 			imageName: e.target[0].value,
 			imageCaption: e.target[1].value,
@@ -261,7 +238,6 @@ class App extends Component {
 			`${BASE_URL}/image/edit/${userImages[this.state.selectedImage].id}`,
 			data
 		)
-		console.log("image sent id", userImages[this.state.selectedImage].id)
 		this.setState({ updateStuff: true })
 		this.props.history.push("/")
 	}
@@ -269,7 +245,6 @@ class App extends Component {
 	deleteImage = (e) => {
 		e.preventDefault()
 		const userImages = JSON.parse(localStorage.userImages).data
-		console.log("deleteImage", e)
 		axios.post(
 			`${BASE_URL}/image/delete/${userImages[this.state.selectedImage].id}`
 		)
@@ -280,7 +255,6 @@ class App extends Component {
 	deleteCharacter = (e) => {
 		e.preventDefault()
 		const userCharacters = JSON.parse(localStorage.userCharacters).data
-		console.log("deleteCharacter", e)
 		axios.post(
 			`${BASE_URL}/character/delete/${
 				userCharacters[this.state.selectedCharacter].id
@@ -292,7 +266,6 @@ class App extends Component {
 
 	changePassword = (e) => {
 		e.preventDefault()
-		console.log("changepass", e)
 		if (e.target.form[0].value === e.target.form[1].value) {
 			const data = {
 				username: JSON.parse(localStorage.userProfile).data[0].username,
