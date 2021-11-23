@@ -2,7 +2,7 @@ import React from "react"
 import { Redirect } from "react-router-dom"
 
 function Signup(props) {
-	if (props.isLoggedIn) {
+	if (localStorage.user) {
 		return <Redirect to={"/"} />
 	}
 	return (

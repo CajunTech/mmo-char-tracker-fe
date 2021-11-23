@@ -7,6 +7,7 @@ function Header(props) {
 			<Link className="mainHeaderLink" to={"/"}>
 				<h1 className="title">New World Character Tracker</h1>
 			</Link>
+			{/* conditional to handle login/logoff header links based on if user exists in localstorage (set at login) */}
 			<ul className="navLinks">
 				{localStorage.user ? (
 					<>

@@ -45,11 +45,11 @@ class App extends Component {
 	componentDidMount = () => {
 		this.getProfile()
 	}
-
+//update called at end of most functions prior to redirect in order to force local storage updates (timing issue discovered)
 	updateFlag = () => {
 		this.setState({ updateStuff: false })
 	}
-
+//grab user related information from DB and push to local storage
 	getProfile = async (e) => {
 		const [userProfile, userCharacters, userImages] = await Promise.all([
 			axios.get(`${BASE_URL}/user/profile/${localStorage.user}`),
@@ -162,7 +162,7 @@ class App extends Component {
 		this.setState({ updateStuff: true })
 		this.props.history.push("/")
 	}
-
+// parsing of link for AWS S3 access
 	setImageLink = (link) => {
 		this.setState({ currentImageLink: link.split(" ").join("+") })
 	}
